@@ -956,7 +956,7 @@ body.light-mode #gcAnimBox .gc-column-popup div[style*="color:#c8d1dc"] {
 /* ---- RESPONSIVE ---- */
 @media (max-width: 640px) {
   /* Prevent iOS zoom on input focus - must be ≥16px */
-  input[type="number"], input[type="text"], select, textarea { font-size: 16px !important; }
+  input[type="text"], select, textarea { font-size: 16px !important; }
   .gc-param-overlay input, .gc-param-overlay select { font-size: 16px !important; width: auto !important; max-width: 100% !important; }
   .gc-param-overlay { font-size: 12px; padding: 8px 10px; left: 44%; }
   .gc-param-overlay label { font-size: 11px !important; }
@@ -1336,7 +1336,7 @@ body.light-mode #quadModeScan {
   color: #334155 !important;
 }
 /* Light mode: GC param input fields */
-body.light-mode #gcParamPanel input[type="number"] {
+body.light-mode #gcParamPanel input[type="text"] {
   background: rgba(241,245,249,0.9) !important;
   border-color: #94a3b8 !important;
   color: #0f172a !important;
@@ -1779,7 +1779,7 @@ body.light-mode #speWashBox   > label { color: #065f3a !important; }
   <div class="tab-panel" id="panel-spe">
     <div class="section-intro">
       <h2>Solid Phase Extraction (SPE)</h2>
-      <p>SPE is the sample preparation technique you'll use to extract caffeine from your beverage before GC-MS analysis. Understanding <em>why</em> each step matters will help you troubleshoot problems in the lab.</p>
+      <p>SPE is the sample preparation technique you'll use to prepare your beverage sample before GC-MS analysis. The fundamental problem is this: <strong>your beverages are water-based, and water cannot be injected into a GC</strong>. It would destroy the column's stationary phase and ruin the separation. SPE solves this by transferring caffeine out of the aqueous matrix and into an organic solvent (acetonitrile) that is GC-compatible. Along the way, SPE also removes interfering matrix components and concentrates your analyte, but getting rid of the water is the essential first step. Understanding <em>why</em> each step matters will help you troubleshoot problems in the lab.</p>
       <p style="font-size:0.82rem;color:var(--text-muted);margin-top:6px;">Work through the numbered sections below in order, then complete the concept checks at the bottom.</p>
     </div>
 
@@ -1792,7 +1792,7 @@ body.light-mode #speWashBox   > label { color: #065f3a !important; }
       </button>
       <div class="accordion-body">
         <p>Solid Phase Extraction is a sample preparation technique that uses a solid adsorbent (packed in a small cartridge) to selectively isolate target analytes from a complex sample matrix. Think of it as a selective filter: your beverage contains sugars, proteins, pigments, and hundreds of other compounds, but you only care about caffeine.</p>
-        <p><strong>The four major benefits of SPE are:</strong> (1) removing interfering matrix components that would obscure your GC-MS signal, (2) concentrating your analyte so it's above the detection limit, (3) exchanging solvents to a form compatible with your instrument, and (4) improving reproducibility compared to liquid-liquid extraction.</p>
+        <p><strong>The critical reason we need SPE in this experiment is solvent exchange:</strong> your samples are aqueous (water-based), but GC requires the analyte to be dissolved in a volatile organic solvent. Water injected into a GC would damage the column and make separation impossible. SPE lets us trap caffeine from the water, wash away the aqueous matrix, and then elute caffeine into acetonitrile — a solvent the GC can handle. Beyond this essential solvent exchange, SPE also (1) removes interfering matrix components that would obscure your GC-MS signal, (2) concentrates your analyte so it's above the detection limit, and (3) improves reproducibility compared to liquid-liquid extraction.</p>
         <p>In this experiment, you'll use a <span class="key-term">CHROMABOND C18 ec</span> cartridge, a reversed-phase adsorbent. The C18 (octadecyl) chains are nonpolar, so they retain nonpolar and moderately polar molecules like caffeine from an aqueous sample.</p>
       </div>
     </div>
@@ -1924,7 +1924,7 @@ body.light-mode #speWashBox   > label { color: #065f3a !important; }
           <div class="step-label">Step 7 of 8</div>
           <h4>Drying &amp; GC Vial Transfer</h4>
           <p>Add <strong>anhydrous MgSO₄</strong> in small portions (start with one spatula tip) to the eluate. Shake the tube; if the powder clumps at the bottom, add more until it floats freely.</p>
-          <p>MgSO₄ binds residual water that co-eluted with the acetonitrile. Water in the sample would damage the GC column's stationary phase and degrade separation quality.</p>
+          <p>MgSO₄ binds residual water that co-eluted with the acetonitrile. This is a critical final safeguard: as discussed earlier, water is incompatible with GC — even small amounts would damage the column's stationary phase and degrade separation quality. The drying step ensures your extract is truly water-free before injection.</p>
           <p><strong>Centrifuge</strong> for 60 s at 5000 rpm (add a counterweight!). Carefully transfer the clear supernatant into a <strong>GC vial with insert</strong> using a Pasteur pipette, ensuring no air bubbles are trapped. The sample is now ready for GC-MS.</p>
         </div>
 
@@ -1979,7 +1979,7 @@ body.light-mode #speWashBox   > label { color: #065f3a !important; }
           <div class="anim-label" id="speStatus" style="display:none;margin-bottom:4px;line-height:1.3;">Select the correct SPE cartridge to begin</div>
           <div id="speVolumeBox" style="display:none;margin-top:4px;padding:6px 8px;background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);border-radius:5px;">
             <label style="color:#f97316;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;">How much sample do you load?</label><br>
-            <input type="number" inputmode="numeric" id="speVolumeInput" placeholder="µL" style="margin-top:3px;padding:3px 6px;width:70px;background:#181d25;border:1px solid #3a4555;border-radius:4px;color:#e2e8f0;font-size:10px;" min="0" max="10000">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" id="speVolumeInput" placeholder="µL" style="margin-top:3px;padding:3px 6px;width:70px;background:#181d25;border:1px solid #3a4555;border-radius:4px;color:#e2e8f0;font-size:10px;" autocomplete="off">
             <span style="color:#b4c4d4;font-size:9px;margin-left:3px;">µL</span>
             <button id="speVolumeCheck" style="margin-left:4px;padding:3px 8px;background:rgba(249,115,22,0.2);border:1px solid #f97316;border-radius:4px;color:#f97316;font-size:9px;cursor:pointer;">Check</button>
             <span id="speVolumeFeedback" style="margin-left:4px;font-size:9px;"></span>
@@ -2141,30 +2141,30 @@ body.light-mode #speWashBox   > label { color: #065f3a !important; }
             </div>
             <div>
               <label style="color:#b4c4d4;font-size:10px;">Flow rate (mL/min)</label><br>
-              <input type="number" inputmode="decimal" id="gcFlow" step="0.1" min="0" max="20" placeholder="..." style="margin-top:2px;padding:3px 6px;width:70px;background:#181d25;border:1.5px solid #3a4555;border-radius:5px;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:10px;">
+              <input type="text" inputmode="decimal" pattern="[0-9.]*" id="gcFlow" placeholder="..." style="margin-top:2px;padding:3px 6px;width:70px;background:#181d25;border:1.5px solid #3a4555;border-radius:5px;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:10px;" autocomplete="off">
             </div>
             <div>
               <label style="color:#b4c4d4;font-size:10px;">Inlet temp (°C)</label><br>
-              <input type="number" inputmode="numeric" id="gcInlet" min="0" max="400" placeholder="..." style="margin-top:2px;padding:3px 6px;width:70px;background:#181d25;border:1.5px solid #3a4555;border-radius:5px;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:10px;">
+              <input type="text" inputmode="numeric" pattern="[0-9]*" id="gcInlet" placeholder="..." style="margin-top:2px;padding:3px 6px;width:70px;background:#181d25;border:1.5px solid #3a4555;border-radius:5px;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:10px;" autocomplete="off">
             </div>
             <div>
               <label style="color:#b4c4d4;font-size:10px;">Split ratio</label><br>
               <div style="display:flex;align-items:center;gap:3px;margin-top:2px;">
-                <input type="number" inputmode="numeric" id="gcSplit" min="1" max="500" placeholder="..." style="padding:3px 6px;width:50px;background:#181d25;border:1.5px solid #3a4555;border-radius:5px;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:10px;">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" id="gcSplit" placeholder="..." style="padding:3px 6px;width:50px;background:#181d25;border:1.5px solid #3a4555;border-radius:5px;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:10px;" autocomplete="off">
                 <span style="color:#8899aa;font-size:9px;">: 1</span>
               </div>
             </div>
             <div>
               <label style="color:#b4c4d4;font-size:10px;">Oven initial (°C)</label><br>
-              <input type="number" inputmode="numeric" id="gcOvenInit" min="0" max="400" placeholder="..." style="margin-top:2px;padding:3px 6px;width:70px;background:#181d25;border:1.5px solid #3a4555;border-radius:5px;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:10px;">
+              <input type="text" inputmode="numeric" pattern="[0-9]*" id="gcOvenInit" placeholder="..." style="margin-top:2px;padding:3px 6px;width:70px;background:#181d25;border:1.5px solid #3a4555;border-radius:5px;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:10px;" autocomplete="off">
             </div>
             <div>
               <label style="color:#b4c4d4;font-size:10px;">Ramp (°C/min)</label><br>
-              <input type="number" inputmode="numeric" id="gcRamp" min="0" max="100" placeholder="..." style="margin-top:2px;padding:3px 6px;width:70px;background:#181d25;border:1.5px solid #3a4555;border-radius:5px;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:10px;">
+              <input type="text" inputmode="numeric" pattern="[0-9]*" id="gcRamp" placeholder="..." style="margin-top:2px;padding:3px 6px;width:70px;background:#181d25;border:1.5px solid #3a4555;border-radius:5px;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:10px;" autocomplete="off">
             </div>
             <div>
               <label style="color:#b4c4d4;font-size:10px;">Oven final (°C)</label><br>
-              <input type="number" inputmode="numeric" id="gcOvenFinal" min="0" max="400" placeholder="..." style="margin-top:2px;padding:3px 6px;width:70px;background:#181d25;border:1.5px solid #3a4555;border-radius:5px;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:10px;">
+              <input type="text" inputmode="numeric" pattern="[0-9]*" id="gcOvenFinal" placeholder="..." style="margin-top:2px;padding:3px 6px;width:70px;background:#181d25;border:1.5px solid #3a4555;border-radius:5px;color:#e2e8f0;font-family:'JetBrains Mono',monospace;font-size:10px;" autocomplete="off">
             </div>
             <div style="display:flex;align-items:end;gap:5px;flex-wrap:wrap;">
               <button id="gcParamCheck" style="padding:5px 12px;background:rgba(99,102,241,0.2);border:1.5px solid #818cf8;border-radius:6px;color:#38bdf8;font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;font-weight:600;">Validate</button>
@@ -2841,15 +2841,15 @@ body.light-mode #speWashBox   > label { color: #065f3a !important; }
               <button id="errGiveUp" style="display:none;position:absolute;top:8px;right:12px;padding:4px 12px;border-radius:5px;border:1px solid rgba(129,140,248,0.35);background:rgba(15,18,25,0.85);color:#818cf8;cursor:pointer;font-size:0.72rem;font-family:'DM Sans',sans-serif;z-index:12;opacity:0;transition:opacity 0.4s ease;">I give up</button>
               <div id="errEICOverlays" style="display:none;">
                 <div id="eic1Overlay" style="position:absolute;top:112px;left:24px;z-index:10;">
-                  <label style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:rgba(249,115,22,0.85);">m/z <input id="eic1Input" type="number" inputmode="numeric" min="1" max="999" step="1" placeholder="?" style="width:52px;padding:3px 6px;border-radius:4px;border:1px solid rgba(249,115,22,0.4);background:rgba(15,18,25,0.85);color:#e2e8f0;font-size:0.75rem;font-family:'JetBrains Mono',monospace;-moz-appearance:textfield;" autocomplete="off"></label>
+                  <label style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:rgba(249,115,22,0.85);">m/z <input id="eic1Input" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="?" style="width:52px;padding:3px 6px;border-radius:4px;border:1px solid rgba(249,115,22,0.4);background:rgba(15,18,25,0.85);color:#e2e8f0;font-size:0.75rem;font-family:'JetBrains Mono',monospace;" autocomplete="off"></label>
                   <div id="eic1Feedback" style="font-size:0.68rem;color:#94a3b8;margin-top:2px;max-width:120px;white-space:nowrap;"></div>
                 </div>
                 <div id="eic2Overlay" style="position:absolute;top:198px;left:24px;display:none;z-index:10;">
-                  <label style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:rgba(129,140,248,0.85);">m/z <input id="eic2Input" type="number" inputmode="numeric" min="1" max="999" step="1" placeholder="?" style="width:52px;padding:3px 6px;border-radius:4px;border:1px solid rgba(129,140,248,0.4);background:rgba(15,18,25,0.85);color:#e2e8f0;font-size:0.75rem;font-family:'JetBrains Mono',monospace;-moz-appearance:textfield;" autocomplete="off"></label>
+                  <label style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:rgba(129,140,248,0.85);">m/z <input id="eic2Input" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="?" style="width:52px;padding:3px 6px;border-radius:4px;border:1px solid rgba(129,140,248,0.4);background:rgba(15,18,25,0.85);color:#e2e8f0;font-size:0.75rem;font-family:'JetBrains Mono',monospace;" autocomplete="off"></label>
                   <div id="eic2Feedback" style="font-size:0.68rem;color:#94a3b8;margin-top:2px;max-width:120px;white-space:nowrap;"></div>
                 </div>
                 <div id="eic3Overlay" style="position:absolute;top:210px;left:24px;display:none;z-index:10;">
-                  <label style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:rgba(52,211,153,0.8);">m/z <input id="eic3Input" type="number" inputmode="numeric" min="1" max="999" step="1" placeholder="?" style="width:52px;padding:3px 6px;border-radius:4px;border:1px solid rgba(52,211,153,0.35);background:rgba(15,18,25,0.85);color:#e2e8f0;font-size:0.75rem;font-family:'JetBrains Mono',monospace;-moz-appearance:textfield;" autocomplete="off"></label>
+                  <label style="display:flex;align-items:center;gap:4px;font-size:0.72rem;color:rgba(52,211,153,0.8);">m/z <input id="eic3Input" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="?" style="width:52px;padding:3px 6px;border-radius:4px;border:1px solid rgba(52,211,153,0.35);background:rgba(15,18,25,0.85);color:#e2e8f0;font-size:0.75rem;font-family:'JetBrains Mono',monospace;" autocomplete="off"></label>
                   <div id="eic3Feedback" style="font-size:0.68rem;color:#94a3b8;margin-top:2px;max-width:120px;white-space:nowrap;"></div>
                 </div>
               </div>
@@ -3031,6 +3031,12 @@ body.light-mode #speWashBox   > label { color: #065f3a !important; }
       <p style="color:#b4c4d4;font-size:13px;"><strong style="color:#e2e8f0;">[4]</strong> Agilent Technologies. <em>Agilent 5977 Series MSD System Concepts Guide</em> (selected chapters). Instrument hardware, EI ionization at 70 eV, quadrupole mass filtering, Scan/SIM modes.</p>
       <p style="color:#b4c4d4;font-size:13px;"><strong style="color:#e2e8f0;">[5]</strong> Agilent Technologies. <em>Fundamentals of Gas Chromatography</em> and <em>GC-MS Fundamentals</em>. Available at: <a href="https://www.agilent.com/en/product/gas-chromatography/what-is-gas-chromatography" style="color:#60a5fa;" target="_blank">agilent.com</a> (accessed 22 Oct 2025). GC separation principles, column chemistry, temperature programming, carrier gas selection, GC-MS instrument types.</p>
       <p style="color:#b4c4d4;font-size:13px;"><strong style="color:#e2e8f0;">[6]</strong> Agilent Technologies. <em>Fundamentals of Calibration in Gas Chromatography</em>. Calibration curve construction, external and internal standards, response factor calculations, practical calibration workflows in GC analysis.</p>
+    </div>
+    <div style="padding:12px 20px 24px;border-top:1px solid var(--border);margin-top:8px;">
+      <p style="color:var(--text-muted);font-size:12px;line-height:1.6;">
+        <strong style="color:var(--text-dim);">AI disclosure</strong><br>
+        The scientific content in this module was compiled and adapted from the sources listed above, directed and reviewed by the course instructor. The interactive animations, visualisations, and web interface were developed with the assistance of a large language model (Claude, Anthropic) based on the instructor's specifications and iterative feedback. All scientific accuracy was verified against the referenced literature.
+      </p>
     </div>
   </div>
 
