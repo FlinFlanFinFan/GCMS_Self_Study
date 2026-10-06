@@ -2335,6 +2335,12 @@ body:not(.app-mode) .hf-launch.app-only { display: flex !important; }   /* every
 .hf-launch-btn { flex: 1 1 140px; min-height: 46px; border-radius: 4px; border: 1.5px solid var(--boku-orange); cursor: pointer; background: var(--boku-orange); color: #000000; font: 600 0.95rem 'Work Sans', sans-serif; }
 .hf-launch-btn.hf-launch-print { background: transparent; color: var(--c-quant); }
 .hf-launch-btn.hf-launch-alt { background: transparent; color: var(--text); }
+/* by device (user 2026-10-06): phones fill in the form, with no table on screen (it doesn't fit; it still prints); desktops type
+   into the table, printing first and the form a click away */
+@media screen { body.ix-phone #hazardForm { display: none !important; } }
+body:not(.ix-phone) .hf-launch #hfPrintNow { order: 1; background: var(--boku-orange); color: #000000; }
+body:not(.ix-phone) .hf-launch #hfOpen { order: 2; background: transparent; color: var(--text); }
+body:not(.ix-phone) .hf-launch .hf-launch-done { order: 3; }
 /* step-by-step hazard form: a few questions per screen, buttons for yes/no and choices */
 #hzWizard {
   position: fixed; left: 0; right: 0; top: 0; height: 100vh; height: 100dvh; z-index: 750;
@@ -3846,9 +3852,8 @@ h1, h2, h3 { letter-spacing: 0; }
 
         <div class="hf-launch app-only" data-screen="Your hazard assessment form">
           <span class="hf-launch-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5"/><path d="M8.5 10h7M8.5 13.5h7M8.5 17h4"/></svg></span>
-          <span class="hf-launch-txt"><strong>Hazard assessment table</strong><span id="hfLaunchState">Pick how you fill it in: step by step, one page per chemical (best on a phone), or straight into the table below. Both fill in the same sheet, and it saves as you go.</span></span>
-          <button type="button" class="hf-launch-btn" id="hfOpen">Step by step</button>
-          <button type="button" class="hf-launch-btn hf-launch-alt" id="hfTable">In the table</button>
+          <span class="hf-launch-txt"><strong>Hazard assessment table</strong><span id="hfLaunchState">Type each chemical you will use straight into the table below. It saves as you go; then print it or save it as a PDF.</span></span>
+          <button type="button" class="hf-launch-btn" id="hfOpen">Fill in the form</button>
           <button type="button" class="hf-launch-btn hf-launch-print" id="hfPrintNow">Print / save PDF</button>
           <button type="button" class="hf-launch-done print-done" data-printed="1">I did print it!</button>
         </div>
@@ -5458,6 +5463,7 @@ function chapterUnlocked(t) { return !chapterBlocker(t); }
 function chapterTodo(t) {
   const s = (window._chapStatus || {})[t] || {}, out = [];
   if (s.sections) out.push(s.sections + (s.sections === 1 ? ' section to open' : ' sections to open'));
+  if (s.interactives) out.push(s.interactives + (s.interactives === 1 ? ' interactive to finish' : ' interactives to finish'));
   if (s.protocol) out.push('the lab protocol');
   if (s.checks) out.push(s.checks + (s.checks === 1 ? ' concept check' : ' concept checks'));
   if (s.print) out.push('print the hazard form');
@@ -8651,10 +8657,14 @@ if (quantWtNext) {
 function updateProgress() {
   let total = 0, done = 0;
   const ixfOk = acc => [].every.call(acc.querySelectorAll('figure.ixf'), f => window._ixfDone && window._ixfDone.has(f.id));   // its interactives finished too
+  const SIMS = ['speAnimAccordion', 'gcAnimAccordion', 'quadAnimAccordion', 'calAnimAccordion', 'errorExplorerAccordion'];
+  const simOk = acc => SIMS.indexOf(acc.id) < 0 || window._simDone.has(acc.id);   // a simulation counts once FINISHED, not just opened (user 2026-10-06)
+  const accOk = acc => !!acc.id && visitedSections.has(acc.id) && ixfOk(acc) && simOk(acc);
+  const ixLeft = acc => [].filter.call(acc.querySelectorAll('figure.ixf'), f => !(window._ixfDone && window._ixfDone.has(f.id))).length + (simOk(acc) ? 0 : 1);
   // Accordions opened (at least once)
   const accs = document.querySelectorAll('.accordion');
   total += accs.length;
-  accs.forEach(acc => { if (acc.id && visitedSections.has(acc.id) && ixfOk(acc)) done++; });
+  accs.forEach(acc => { if (accOk(acc)) done++; });
   // Concept checks answered
   const ccs = document.querySelectorAll('.concept-check');
   total += ccs.length;
@@ -8686,7 +8696,7 @@ function updateProgress() {
     if (!panel) return;
     const panelAccs = panel.querySelectorAll('.accordion');
     let panelAccsDoneCount = 0;
-    panelAccs.forEach(acc => { if (acc.id && visitedSections.has(acc.id) && ixfOk(acc)) panelAccsDoneCount++; });
+    panelAccs.forEach(acc => { if (accOk(acc)) panelAccsDoneCount++; });
     const panelCCs = panel.querySelectorAll('.concept-check');
     const panelCCsDone = panel.querySelectorAll('.cc-explanation.visible');
     let sTotal = panelAccs.length + panelCCs.length;
@@ -8699,11 +8709,11 @@ function updateProgress() {
     if (s.tab === 'gcms') { sTotal += 1; if (gcmsProtocolDone) sDone += 1; }
     // Quant also needs walkthrough done
     if (s.tab === 'quant') { sTotal += 1; if (quantProtocolDone) sDone += 1; }
-    const missing = [];
-    panelAccs.forEach(acc => { if (acc.id && !(visitedSections.has(acc.id) && ixfOk(acc))) missing.push(acc.id); });
+    const missing = []; let ixTodo = 0;               // sections not opened yet; interactives in opened sections not finished yet
+    panelAccs.forEach(acc => { if (!acc.id) return; if (!visitedSections.has(acc.id)) missing.push(acc.id); else ixTodo += ixLeft(acc); });
     window._chapStatus = window._chapStatus || {};
     window._chapStatus[s.tab] = {
-      done: sTotal > 0 && sDone >= sTotal, sections: missing.length, checks: panelCCs.length - panelCCsDone.length,
+      done: sTotal > 0 && sDone >= sTotal, sections: missing.length, interactives: ixTodo, checks: panelCCs.length - panelCCsDone.length,
       protocol: (s.tab === 'spe' && !protocolDone) || (s.tab === 'gcms' && !gcmsProtocolDone) || (s.tab === 'quant' && !quantProtocolDone),
       print: s.tab === 'intro' && !window.hasPrintedSafetyForm
     };
@@ -9506,9 +9516,13 @@ document.addEventListener('DOMContentLoaded', function() {
   function launchText() {
     var el = document.getElementById('hfLaunchState'); if (!el) return;
     var n = lastUsed(chem);
-    if (printed()) el.textContent = '✓ Printed. ' + n + ' chemical' + (n === 1 ? '' : 's') + ' entered. You can edit it and print again.';
-    else if (n) el.textContent = n + ' chemical' + (n === 1 ? '' : 's') + ' entered so far, not printed yet. Continue where you left off.';
-    if (launch) launch.textContent = n && !printed() ? 'Continue step by step' : 'Step by step';
+    var phone = document.body.classList.contains('ix-phone'), c = n + ' chemical' + (n === 1 ? '' : 's');   // phones: the form only; desktop: the table (user 2026-10-06)
+    if (printed()) el.textContent = '✓ Printed. ' + c + ' filled in. You can change ' + (n === 1 ? 'it' : 'them') + ' and print again.';
+    else if (n) el.textContent = c + ' filled in so far, not printed yet.' + (phone ? ' Continue the form, then print it or save it as a PDF from your phone.' : ' Carry on in the table below, then print it or save it as a PDF.');
+    else el.textContent = phone ? 'Fill in the form: one page per chemical you will use. It saves as you go. When you are done, print it or save it as a PDF, right from your phone.'
+                                : 'Type each chemical you will use straight into the table below. It saves as you go; then print it or save it as a PDF.';
+    if (launch) launch.textContent = phone ? (n && !printed() ? 'Continue the form' : 'Fill in the form') : 'Fill it in as a form instead';
+    var ttl = el.parentElement && el.parentElement.querySelector('strong'); if (ttl) ttl.textContent = phone ? 'Hazard assessment form' : 'Hazard assessment table';   // no table on a phone
   }
   function open(step) {
     lastFocus = document.activeElement;
