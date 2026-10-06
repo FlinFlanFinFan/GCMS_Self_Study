@@ -3040,7 +3040,12 @@ body.ix-phone .walkthrough.ix-open > .ix-inner { height: 100%; display: flex; fl
 body.ix-phone .walkthrough.ix-open .wt-header { order: 0; flex: none; min-height: 48px; box-sizing: border-box; padding: 6px 56px 6px 12px; }
 body.ix-phone .walkthrough.ix-open .wt-nav { order: 1; flex: none; }
 body.ix-phone .walkthrough.ix-open > .ix-inner > :not(.wt-header):not(.wt-nav):not(.wt-body) { order: 2; flex: none; }
-body.ix-phone .walkthrough.ix-open .wt-body { order: 3; flex: none; min-height: 0 !important; overflow: hidden; }
+body.ix-phone .walkthrough.ix-open .wt-body { order: 3; flex: none; min-height: 0 !important; overflow: hidden; touch-action: pan-y; }
+@keyframes ixSlideL { from { transform: translateX(32px); opacity: 0.15; } to { transform: none; opacity: 1; } }
+@keyframes ixSlideR { from { transform: translateX(-32px); opacity: 0.15; } to { transform: none; opacity: 1; } }
+body.ix-phone .walkthrough.ix-open[data-swipe="left"] .wt-step.active { animation: ixSlideL 0.22s ease-out; }
+body.ix-phone .walkthrough.ix-open[data-swipe="right"] .wt-step.active { animation: ixSlideR 0.22s ease-out; }
+@media (prefers-reduced-motion: reduce) { body.ix-phone .walkthrough.ix-open .wt-step.active { animation: none !important; } }
 body.ix-phone .ix-open .ixg-restart { display: none; }                     /* the guide's Start over: the same as Start again */
 .ixg-again { background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 0; padding: 6px 14px; font: 600 0.84rem 'Work Sans', sans-serif; cursor: pointer; }
 .ixg-back + .ixg-again { margin-left: 0; }
@@ -11247,6 +11252,25 @@ document.addEventListener('click', function(e) {
     } else if (host.id === 'quadAnimBox') { var sb = host.querySelector('.quad-sidebar'); if (!sb) return; sb.classList.add('ix-pane'); }
     else if (host.classList.contains('walkthrough')) {   // a lab protocol: its pages are the pane; each page change squeezes again
       var wb = host.querySelector('.wt-body'); if (!wb) return; wb.classList.add('ix-pane');
+      if (!host._swipe) {                                  // swipe between the pages (user 2026-10-06: "make the phone protocol swipeable")
+        host._swipe = true; var sx = 0, sy = 0, t0 = 0, on = false;
+        var navs = function() { var b = host.querySelectorAll('.wt-nav button'); return { prev: b[0], next: host.querySelector('.wt-nav button.primary') }; };
+        var nb = navs();                                   // the buttons too: the new page slides in from the matching side
+        if (nb.prev) nb.prev.addEventListener('click', function() { host.dataset.swipe = 'right'; });
+        if (nb.next) nb.next.addEventListener('click', function() { host.dataset.swipe = 'left'; });
+        host.addEventListener('touchstart', function(e) {
+          on = open === host && e.touches.length === 1 && !(e.target.closest && e.target.closest('input, select, textarea, .ix-close'));
+          if (on) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; t0 = Date.now(); }
+        }, { passive: true });
+        host.addEventListener('touchend', function(e) {
+          if (!on || open !== host) return; on = false;
+          var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+          if (Math.abs(dx) < 60 || Math.abs(dx) < 1.6 * Math.abs(dy) || Date.now() - t0 > 800) return;   // not a sideways swipe
+          var steps = [].slice.call(host.querySelectorAll('.wt-step')), k = steps.findIndex(function(st) { return st.classList.contains('active'); }), b = navs();
+          if (dx < 0 && k < steps.length - 1 && b.next && !b.next.disabled) b.next.click();
+          else if (dx > 0 && k > 0 && b.prev && !b.prev.disabled) b.prev.click();
+        }, { passive: true });
+      }
       if (!host._protoObs) {
         host._protoObs = new MutationObserver(function() { if (open === host && host._pick) requestAnimationFrame(function() { fitProto(host); }); });   // measured again: the 'Protocol complete' line may have appeared
         [].slice.call(host.querySelectorAll('.wt-step')).forEach(function(st) { host._protoObs.observe(st, { attributes: true, attributeFilter: ['class'] }); });
