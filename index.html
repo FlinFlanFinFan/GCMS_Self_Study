@@ -1557,7 +1557,7 @@ body.light-mode #speWashBox   > label { color: #00AA5A !important; }
   --boku-green: #00AA5A;
   --boku-purple: #4B288C;
   --boku-orange: #E6641E;
-  --c-intro: #999999;
+  --c-intro: #FFED00;   /* BOKU yellow (user 2026-10-06): yellow grounds carry black ink */
   --c-spe: #00AA5A;
   --c-gcms: #937EBA;
   --c-quant: #E6641E;
@@ -1568,7 +1568,7 @@ body.light-mode #speWashBox   > label { color: #00AA5A !important; }
   color-scheme: dark;
 }
 body.light-mode {
-  --c-intro: #666666;
+  --c-intro: #FFED00;
   --c-spe: #00AA5A;
   --c-gcms: #4B288C;
   --c-quant: #E6641E;
@@ -2669,6 +2669,23 @@ body.app-mode.app-sim-full #appSimClose { display: grid; }
 .wg-txt b { font-size: 0.98rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wg-btn svg { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .hc-meter { display: block; width: 100%; height: 4px; margin-top: 12px; border-radius: 0; background: var(--surface-3); overflow: hidden; }
+/* Intro & safety in BOKU yellow: black ink on yellow grounds; in light mode no yellow text or icons on white */
+.home-card[data-go="intro"] .hc-ico, .tab-btn[data-tab="intro"].active .tab-ico { color: #000000; }
+body.light-mode .tab-btn[data-tab="intro"]:not(.active) .tab-ico { background: color-mix(in srgb, #FFED00 45%, transparent); color: #000000; }
+body.light-mode #panel-intro .accordion:not(.visited) .acc-badge { background: color-mix(in srgb, #FFED00 55%, transparent) !important; color: #000000 !important; }
+body.light-mode .home-card[data-go="intro"] .hc-meter i { box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); }   /* the yellow bar on a pale track */
+@media (max-width: 979px) {
+  .tab-btn[data-tab="intro"].active .tab-ico { background: color-mix(in srgb, #FFED00 30%, transparent); color: var(--text); }
+}
+/* the icon keeps its square (user 2026-10-06: "the SPE and GC-MS icons get squished") */
+.home-card .hc-ico, .home-card .hc-meter { flex-shrink: 0; }
+/* short cards (the browser's bar showing): the icon sits beside 'Chapter 0n', smaller, so the title and the state line fit */
+@container (max-height: 130px) {   /* the card's inner height: the full layout needs about 130 px */
+  .home-grid .home-card .hc-ico { position: absolute; left: 12px; top: 13px; width: 28px; height: 28px; margin: 0; }
+  .home-grid .home-card .hc-ico > svg { width: 17px; height: 17px; }
+  .home-grid .home-card .hc-num { margin: 0 0 2px 38px; min-height: 28px; display: flex; align-items: center; }
+  .home-grid .home-card .hc-desc { display: none; }
+}
 .hc-meter i { display: block; height: 100%; width: calc(var(--p, 0) * 100%); border-radius: 0; background: var(--sec); transition: width 0.5s ease; }
 .home-card.locked .hc-meter { display: none; }
 .hc-meter + .hc-state { margin-top: 8px; }
@@ -3498,6 +3515,12 @@ body.ix-phone .ix-host.ix-open.ix-wrong > .ix-turn {
 .ix-turn b { display: block; }
 .ix-turn span { color: var(--text-dim); }
 body.ix-phone .ix-host.ix-open.ix-wrong > .ix-turn { align-items: center; gap: 14px; width: min(340px, calc(100vw - 32px)); box-sizing: border-box; }
+/* the ways out stand out (user 2026-10-06: light mode dark, dark mode light): home top left, the X of anything full screen */
+#homeBtn, body.ix-phone .ix-host.ix-open > .ix-close, .hzw-x, #fgView .fgv-x { background: var(--text); border-color: var(--text); color: var(--bg); }
+#homeBtn:hover, body.ix-phone .ix-host.ix-open > .ix-close:hover, .hzw-x:hover, #fgView .fgv-x:hover {
+  background: color-mix(in srgb, var(--text) 80%, var(--bg)); border-color: color-mix(in srgb, var(--text) 80%, var(--bg)); color: var(--bg); }
+#homeBtn:focus-visible, body.ix-phone .ix-host.ix-open > .ix-close:focus-visible, .hzw-x:focus-visible, #fgView .fgv-x:focus-visible { outline: 2px solid var(--boku-green); outline-offset: 2px; }
+#homeBtn svg { stroke-width: 2.2; }
 .ix-turn .ix-rot { flex: none; width: 46px; height: 46px; fill: none; stroke: var(--text); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; animation: ixRot 2.6s ease-in-out infinite; }
 .ix-turn .ix-rot .ix-rot-arrow { stroke: var(--boku-green, #00AA5A); }
 .ix-turn .ix-rot-up { animation-name: ixRotUp; }
@@ -12284,10 +12307,9 @@ window.IxWhen = function (fig, cond) {
     baseBtns.forEach(function (x) { x.setAttribute('aria-pressed', x.dataset.b === baseSel ? 'true' : 'false'); });
     fig.querySelector('.ig-note').textContent = NOTE_E[endSel] + ' ' + NOTE_B[baseSel];
   }
-  function flashStd() {                              // the standards' integration for about 2 s, fading out (none while it is shown anyway)
-    if (showStd) { draw(); return; }
-    flashUntil = performance.now() + 2000; cancelAnimationFrame(flashRaf);
-    (function tick() { draw(); if (performance.now() < flashUntil) flashRaf = requestAnimationFrame(tick); })();
+  function flashStd() {                              // a calibration button shows its auto-integration and leaves it on (user 2026-10-06:
+    if (!showStd) setShow(true);                     // a 2 s flash was over before students looked)
+    draw();
   }
   endBtns.forEach(function (x) { x.addEventListener('click', function () { pick(x.dataset.e, baseSel); flashStd(); }); });
   baseBtns.forEach(function (x) { x.addEventListener('click', function () { pick(endSel, x.dataset.b); flashStd(); }); });
@@ -12305,15 +12327,15 @@ window.IxWhen = function (fig, cond) {
   var TOUR = [
     { title: 'A real calibration run', targets: [{ el: svg }, q('.ixf-src')], keep: [{ el: svg }],
       html: 'This peak is one calibration standard, 0.03&nbsp;mg/mL, from a real run (split 50:1). The whole calibration curve of that run was auto-integrated in six ways. Each way treats every standard the same, so each has its own calibration line.' },
+    { title: 'Show the auto-integration', targets: [q('.ig-show')], keep: [{ el: svg }, q('.ig-conc')], next: null, hint: 'Tap Show the auto-integration.',
+      html: 'Draw the auto-integration of the whole calibration curve on this peak. It stays on while you match it.',
+      wait: until(function () { return showStd; }) },
     { title: 'Pick the auto-integration', targets: [q('.ig-ctrls')], keep: [{ el: svg }, q('.ig-conc')], next: null, hint: 'Tap Early, then Edge to edge.',
-      html: 'First, pick how the whole calibration curve was auto-integrated. Many auto-integrators end the peak early and draw the baseline from edge to edge.',
+      html: 'Now pick how the whole calibration curve was auto-integrated; the boundaries on the peak follow. Many auto-integrators end the peak early and draw the baseline from edge to edge.',
       wait: until(function () { return style === 'early_edge'; }) },
     { title: 'Match it by hand', targets: [{ el: svg }, q('.ig-conc')], keep: [q('.ig-conc')], next: null, hint: 'Drag the dots.',
-      html: 'Now integrate this standard by hand to match. Start where the peak rises and end about 0.1&nbsp;min after the apex, with both dots on the trace. The closer you match it, the closer your accuracy gets to the auto-integration&rsquo;s.',
+      html: 'Now integrate this standard by hand to match the boundaries shown. Start where the peak rises and end about 0.1&nbsp;min after the apex, with both dots on the trace. The closer you match it, the closer your accuracy gets to the auto-integration&rsquo;s.',
       wait: until(close) },
-    { title: 'Compare', targets: [q('.ig-show')], keep: [{ el: svg }, q('.ig-conc')], next: null, hint: 'Tap Show the auto-integration.',
-      html: 'Draw the auto-integration on your peak. How close did you get?',
-      wait: until(function () { return showStd; }) },
     { title: 'What the numbers mean', targets: [q('.ig-conc'), { el: fig.querySelector('.ig-tip').parentElement }], anchor: 1, keep: [{ el: svg }],
       html: 'The table puts your hand integration next to the auto-integration of this standard: the area, the concentration read on the calibration curve you picked, and its <b>accuracy</b> (the concentration ÷ the true 0.030&nbsp;mg/mL). The box below shows where your integration differs.' },
     { title: 'The textbook way', targets: [q('.ig-ctrls')], keep: [{ el: svg }, q('.ig-conc')], next: null, hint: 'Tap Whole tail, then Drop.',
@@ -13194,6 +13216,15 @@ window.IxWhen = function (fig, cond) {
     else window.addEventListener('resize', place);
   });
 })();
+</script>
+<script>
+/* Done on a protocol's last page closes it when it is full screen on a phone (user 2026-10-06). Read before the page's own
+   handler runs: the label says Done only on the last page. */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest && e.target.closest('#wtNext, #gcmsWtNext, #quantWtNext'); if (!b) return;
+  var host = b.closest('.walkthrough');
+  if (host && host.classList.contains('ix-open') && b.textContent.trim() === 'Done' && window._ixClose) setTimeout(window._ixClose, 0);
+}, true);
 </script>
 </body>
 </html>
