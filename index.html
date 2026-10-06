@@ -11253,6 +11253,7 @@ document.addEventListener('click', function(e) {
   // full width; if it is still taller than the screen, shrink it evenly (canvas taps still map correctly)
   function fit() {
     if (!open) return;
+    var vv0 = window.visualViewport; fitVW = Math.round(vv0 ? vv0.width : window.innerWidth);   // the width this layout is for
     open.classList.toggle('ix-wrong', !lockByUs && wrongWay(open));
     var w = inner(open);
     w.style.transform = ''; w.style.marginBottom = '';
@@ -11534,8 +11535,22 @@ document.addEventListener('click', function(e) {
   });
   document.addEventListener('fullscreenchange', function() { if (!document.fullscreenElement) { fsByUs = false; lockByUs = false; if (open) fit(); } });
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && open) closeBox(); });
-  window.addEventListener('resize', function() { if (open && !selfResize) { clearTimeout(fit._t); fit._t = setTimeout(fit, 120); } });
-  if (window.visualViewport) window.visualViewport.addEventListener('resize', function() { if (open && !selfResize) { clearTimeout(fit._t); fit._t = setTimeout(fit, 120); } });   // toolbars coming and going
+  // typing (user 2026-10-06: "the module shrinks when typing", on a phone): the keyboard takes the lower part of the screen and
+  // the layout keeps its size; a turn of the phone (another width) still re-fits
+  var fitVW = 0;
+  function typing() {
+    var a = document.activeElement;
+    return !!(open && a && open.contains(a) && (a.matches('textarea, [contenteditable="true"]') ||
+      (a.matches('input') && !/^(range|checkbox|radio|button|submit|reset|color|file)$/i.test(a.type))));
+  }
+  function refit() {
+    if (!open || selfResize) return;
+    var vv = window.visualViewport, w = Math.round(vv ? vv.width : window.innerWidth);
+    if (typing() && w === fitVW) return;
+    clearTimeout(fit._t); fit._t = setTimeout(fit, 120);
+  }
+  window.addEventListener('resize', refit);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', refit);   // toolbars coming and going (not the keyboard)
   // hints: in full screen the page cannot scroll to the protocol text, so the highlighted paragraphs come to the student
   function hintSheet(nodes, title) {
     if (!open || !nodes.length) return;
