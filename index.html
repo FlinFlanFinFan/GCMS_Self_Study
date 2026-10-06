@@ -3100,7 +3100,7 @@ body.ix-phone .walkthrough.ix-open .wt-body { order: 3; flex: none; min-height: 
 body.ix-phone .walkthrough.ix-open[data-swipe="left"] .wt-step.active { animation: ixSlideL 0.22s ease-out; }
 body.ix-phone .walkthrough.ix-open[data-swipe="right"] .wt-step.active { animation: ixSlideR 0.22s ease-out; }
 @media (prefers-reduced-motion: reduce) { body.ix-phone .walkthrough.ix-open .wt-step.active { animation: none !important; } }
-body.ix-phone .ix-open .ixg-restart { display: none; }                     /* the guide's Start over: the same as Start again */
+body.ix-phone .ix-open .ixg:has(.ixg-again) .ixg-restart { display: none; }   /* the guide's Start over: the same as its Start again (only where there is one) */
 .ixg-again { background: transparent; color: var(--text); border: 1px solid var(--border); border-radius: 0; padding: 6px 14px; font: 600 0.84rem 'Work Sans', sans-serif; cursor: pointer; }
 .ixg-back + .ixg-again { margin-left: 0; }
 .ixf .ixf-foot.ix-pair { justify-content: flex-start; align-items: center; gap: 10px; }
