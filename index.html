@@ -1557,7 +1557,7 @@ body.light-mode #speWashBox   > label { color: #00AA5A !important; }
   --boku-green: #00AA5A;
   --boku-purple: #4B288C;
   --boku-orange: #E6641E;
-  --c-intro: #FFED00;   /* BOKU yellow (user 2026-10-06): yellow grounds carry black ink */
+  --c-intro: #FFED00;   /* BOKU yellow (user 2026-10-06; dark mode as it is: "dark mode is good"); black ink on it */
   --c-spe: #00AA5A;
   --c-gcms: #937EBA;
   --c-quant: #E6641E;
@@ -1568,7 +1568,7 @@ body.light-mode #speWashBox   > label { color: #00AA5A !important; }
   color-scheme: dark;
 }
 body.light-mode {
-  --c-intro: #FFED00;
+  --c-intro: #FFF899;   /* light mode: its 40 % tint, pastel (user 2026-10-07: "Light mode is too neon") */
   --c-spe: #00AA5A;
   --c-gcms: #4B288C;
   --c-quant: #E6641E;
@@ -1579,6 +1579,9 @@ body.light-mode {
 .tab-btn[data-tab="spe"],   #panel-spe,   #nav-spe   { --sec: var(--c-spe); }
 .tab-btn[data-tab="gcms"],  #panel-gcms,  #nav-gcms  { --sec: var(--c-gcms); }
 .tab-btn[data-tab="quant"], #panel-quant, #nav-quant { --sec: var(--c-quant); }
+/* the ink on a solid chapter colour (done badges): black on yellow, green, orange and dark mode's light purple; white on purple */
+#panel-intro, #panel-spe, #panel-quant, #panel-gcms { --sec-on: #000000; }
+body.light-mode #panel-gcms { --sec-on: #FFFFFF; }
 .tab-btn[data-tab="calc"],  #panel-calc, #nav-calc { --sec: var(--c-quant); }
 .tab-btn[data-tab="refs"],  #panel-refs              { --sec: var(--c-refs); }
 
@@ -1789,7 +1792,7 @@ body.light-mode .welcome .home-theme .ht-sun, body:not(.light-mode) .welcome .ho
   color: var(--sec, var(--boku-green)) !important; font-size: 0.78rem !important; font-weight: 600 !important;
   transition: background 0.25s, color 0.25s;
 }
-.accordion.visited .acc-badge { background: var(--boku-green) !important; color: #000000 !important; animation: badgePop 0.5s cubic-bezier(.3,1.6,.5,1); }
+.accordion.visited .acc-badge { background: var(--sec, var(--boku-green)) !important; color: var(--sec-on, #000000) !important; animation: badgePop 0.5s cubic-bezier(.3,1.6,.5,1); }
 @keyframes badgePop { 0% { transform: scale(0.6); } 100% { transform: scale(1); } }
 .accordion.visited .acc-badge::after {
   content: ''; position: absolute; right: -4px; bottom: -4px; width: 14px; height: 14px; border-radius: 50%;
@@ -1797,7 +1800,7 @@ body.light-mode .welcome .home-theme .ht-sun, body:not(.light-mode) .welcome .ho
   border: 1.5px solid var(--boku-green);
 }
 body.light-mode .acc-badge { background: color-mix(in srgb, var(--sec, var(--boku-green)) 14%, transparent) !important; color: var(--sec, var(--boku-green)) !important; }
-body.light-mode .accordion.visited .acc-badge { background: var(--boku-green) !important; color: #000000 !important; }
+body.light-mode .accordion.visited .acc-badge { background: var(--sec, var(--boku-green)) !important; color: var(--sec-on, #000000) !important; }
 body.light-mode .accordion-header.type-protocol,
 body.light-mode .accordion-header.type-animation,
 body.light-mode .accordion-header.type-info { color: var(--text) !important; }
@@ -1851,7 +1854,10 @@ body:not(.light-mode) .cc-option.selected .radio { border-color: var(--c-gcms); 
 
 .cc-header .cc-bullet { position: relative; transition: background 0.25s; }
 .concept-check.cc-done .cc-header { border-color: color-mix(in srgb, var(--boku-green) 45%, var(--border)); background: color-mix(in srgb, var(--boku-green) 7%, var(--surface)); }
-.concept-check.cc-done .cc-bullet { background: var(--boku-green); }
+/* the concept checks' Q: the chapter colour too, like the numbered sections (it was solid orange everywhere) */
+.concept-check .cc-header .cc-bullet { background: color-mix(in srgb, var(--sec, var(--boku-orange)) 16%, transparent); color: var(--sec, var(--boku-orange)); }
+body.light-mode .concept-check .cc-header .cc-bullet { background: color-mix(in srgb, var(--sec, var(--boku-orange)) 14%, transparent); }
+.concept-check.cc-done .cc-header .cc-bullet, body.light-mode .concept-check.cc-done .cc-header .cc-bullet { background: var(--sec, var(--boku-green)); color: var(--sec-on, #000000); }
 .concept-check.cc-done .cc-bullet::after {
   content: ''; position: absolute; right: -4px; bottom: -4px; width: 14px; height: 14px; border-radius: 50%;
   background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300AA5A' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 9px no-repeat;
@@ -2671,11 +2677,11 @@ body.app-mode.app-sim-full #appSimClose { display: grid; }
 .hc-meter { display: block; width: 100%; height: 4px; margin-top: 12px; border-radius: 0; background: var(--surface-3); overflow: hidden; }
 /* Intro & safety in BOKU yellow: black ink on yellow grounds; in light mode no yellow text or icons on white */
 .home-card[data-go="intro"] .hc-ico, .tab-btn[data-tab="intro"].active .tab-ico { color: #000000; }
-body.light-mode .tab-btn[data-tab="intro"]:not(.active) .tab-ico { background: color-mix(in srgb, #FFED00 45%, transparent); color: #000000; }
-body.light-mode #panel-intro .accordion:not(.visited) .acc-badge { background: color-mix(in srgb, #FFED00 55%, transparent) !important; color: #000000 !important; }
+body.light-mode .tab-btn[data-tab="intro"]:not(.active) .tab-ico { background: color-mix(in srgb, var(--c-intro) 60%, transparent); color: #000000; }
+body.light-mode #panel-intro .accordion:not(.visited) .acc-badge { background: var(--c-intro) !important; color: #000000 !important; }
 body.light-mode .home-card[data-go="intro"] .hc-meter i { box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); }   /* the yellow bar on a pale track */
 @media (max-width: 979px) {
-  .tab-btn[data-tab="intro"].active .tab-ico { background: color-mix(in srgb, #FFED00 30%, transparent); color: var(--text); }
+  .tab-btn[data-tab="intro"].active .tab-ico { background: color-mix(in srgb, var(--c-intro) 30%, transparent); color: var(--text); }
 }
 /* the icon keeps its square (user 2026-10-06: "the SPE and GC-MS icons get squished") */
 .home-card .hc-ico, .home-card .hc-meter { flex-shrink: 0; }
@@ -2845,7 +2851,7 @@ body.light-mode { --fg-guide:#232E58;--fg-guideInk:#FFFFFF;--fg-ink:#000000;--fg
    (user 2026-10-05: "match the ones from the previous interactives") */
 .ixf .ixf-head > .acc-badge { flex: none; }
 .ixf.ixf-done .ixf-head > .acc-badge, body.light-mode .ixf.ixf-done .ixf-head > .acc-badge {
-  background: var(--boku-green) !important; color: #000000 !important; animation: badgePop 0.5s cubic-bezier(.3,1.6,.5,1); }
+  background: var(--sec, var(--boku-green)) !important; color: var(--sec-on, #000000) !important; animation: badgePop 0.5s cubic-bezier(.3,1.6,.5,1); }
 .ixf.ixf-done .ixf-head > .acc-badge::after {
   content: ''; position: absolute; right: -4px; bottom: -4px; width: 14px; height: 14px; border-radius: 50%;
   background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300AA5A' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 9px no-repeat;
@@ -12307,9 +12313,8 @@ window.IxWhen = function (fig, cond) {
     baseBtns.forEach(function (x) { x.setAttribute('aria-pressed', x.dataset.b === baseSel ? 'true' : 'false'); });
     fig.querySelector('.ig-note').textContent = NOTE_E[endSel] + ' ' + NOTE_B[baseSel];
   }
-  function flashStd() {                              // a calibration button shows its auto-integration and leaves it on (user 2026-10-06:
-    if (!showStd) setShow(true);                     // a 2 s flash was over before students looked)
-    draw();
+  function flashStd() {                              // no flash (user 2026-10-06: it was over before students looked): Show the
+    draw();                                          // auto-integration draws it, and keeps it
   }
   endBtns.forEach(function (x) { x.addEventListener('click', function () { pick(x.dataset.e, baseSel); flashStd(); }); });
   baseBtns.forEach(function (x) { x.addEventListener('click', function () { pick(endSel, x.dataset.b); flashStd(); }); });
@@ -12327,12 +12332,12 @@ window.IxWhen = function (fig, cond) {
   var TOUR = [
     { title: 'A real calibration run', targets: [{ el: svg }, q('.ixf-src')], keep: [{ el: svg }],
       html: 'This peak is one calibration standard, 0.03&nbsp;mg/mL, from a real run (split 50:1). The whole calibration curve of that run was auto-integrated in six ways. Each way treats every standard the same, so each has its own calibration line.' },
-    { title: 'Show the auto-integration', targets: [q('.ig-show')], keep: [{ el: svg }, q('.ig-conc')], next: null, hint: 'Tap Show the auto-integration.',
-      html: 'Draw the auto-integration of the whole calibration curve on this peak. It stays on while you match it.',
-      wait: until(function () { return showStd; }) },
     { title: 'Pick the auto-integration', targets: [q('.ig-ctrls')], keep: [{ el: svg }, q('.ig-conc')], next: null, hint: 'Tap Early, then Edge to edge.',
-      html: 'Now pick how the whole calibration curve was auto-integrated; the boundaries on the peak follow. Many auto-integrators end the peak early and draw the baseline from edge to edge.',
+      html: 'First, pick how the whole calibration curve was auto-integrated. Many auto-integrators end the peak early and draw the baseline from edge to edge.',
       wait: until(function () { return style === 'early_edge'; }) },
+    { title: 'Show the auto-integration', targets: [q('.ig-show')], keep: [{ el: svg }, q('.ig-conc')], next: null, hint: 'Tap Show the auto-integration.',
+      html: 'Draw this auto-integration on the peak. It stays on while you match it.',
+      wait: until(function () { return showStd; }) },
     { title: 'Match it by hand', targets: [{ el: svg }, q('.ig-conc')], keep: [q('.ig-conc')], next: null, hint: 'Drag the dots.',
       html: 'Now integrate this standard by hand to match the boundaries shown. Start where the peak rises and end about 0.1&nbsp;min after the apex, with both dots on the trace. The closer you match it, the closer your accuracy gets to the auto-integration&rsquo;s.',
       wait: until(close) },
