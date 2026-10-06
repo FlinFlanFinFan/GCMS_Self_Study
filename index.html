@@ -1575,6 +1575,7 @@ body.light-mode {
   --c-refs: #666666;
   color-scheme: light;
 }
+html, body { overscroll-behavior-x: none; }   /* no swipe-back out of the page from inside a drawing (monkey test 2026-10-07) */
 .tab-btn[data-tab="intro"], #panel-intro, #nav-intro { --sec: var(--c-intro); }
 .tab-btn[data-tab="spe"],   #panel-spe,   #nav-spe   { --sec: var(--c-spe); }
 .tab-btn[data-tab="gcms"],  #panel-gcms,  #nav-gcms  { --sec: var(--c-gcms); }
