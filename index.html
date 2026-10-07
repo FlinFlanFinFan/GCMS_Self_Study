@@ -3503,6 +3503,7 @@ body.ix-phone .ix-host:not(.locked-interactive):not(.ix-open) > .ix-cover {
 .ix-cover .ix-go svg, .ix-close svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .ix-cover .ix-sub { font-size: 0.8rem; color: var(--text-dim); text-align: center; }
 body.ix-lock { overflow: hidden !important; }
+body.ix-lock .tab-nav { visibility: hidden; }   /* the chapter bar never shows under a full-screen view */
 body.ix-lock #ixBackdrop { display: block; position: fixed; inset: 0; z-index: 9990; background: var(--bg, #111111); }
 body.ix-phone .ix-host.ix-open {
   position: fixed !important; top: 0; left: 0; bottom: 0; width: 100vw; z-index: 9991 !important; margin: 0 !important; max-width: none !important;
@@ -3902,7 +3903,7 @@ h1, h2, h3 { letter-spacing: 0; }
           <li>Caffeine standard (1 mg/mL in water)</li>
         </ul>
         <p>Search for each one's safety data sheet (SDS) and fill in the table from it.</p>
-        <div class="ppe-note" data-screen="General lab safety"><svg class="ppe-ico" viewBox="0 0 1280 1280" role="img" aria-label="Wear a lab coat"><circle cx="640" cy="640" r="640" fill="#005387"/><g fill="#FFFFFF"><path d="M527 157 L448 157 C420 157 398 175 388 186 C378 197 368 225 363 241 L218 695 L327 729 L458 363 L355 1089 C400 1098 453 1108 490 1113 C528 1118 580 1121 620 1123 L628 388 Z"/><path d="M753 157 L832 157 C860 157 882 175 892 186 C902 197 912 225 917 241 L1062 695 L953 729 L822 363 L925 1089 C880 1098 827 1108 790 1113 C752 1118 700 1121 660 1123 L652 388 Z"/><path d="M561 177 C600 189 623 192 640 192 C657 192 682 189 718 177 L640 356 Z"/></g><g fill="#005387"><rect x="699" y="330" width="74" height="36"/><rect x="460" y="789" width="120" height="20"/><rect x="700" y="789" width="120" height="20"/></g></svg><div class="ppe-text"><strong class="ppe-h">General lab safety</strong><dl class="ppe-rules"><dt>Always</dt><dd>Lab coat and safety goggles.</dd><dt>Gloves</dt><dd>Next to the SPE manifold. Only for acetonitrile; avoid splashes.</dd><dt>GC-MS</dt><dd>Touch the connections only if an instructor says so, and with gloves.</dd><dt>Waste</dt><dd>Anything with acetonitrile goes into the non-halogenated organic waste.</dd></dl></div><svg class="ppe-ico" viewBox="0 0 1280 1280" role="img" aria-label="Wear eye protection"><circle cx="640" cy="640" r="640" fill="#005387"/><path d="M291,566 A349,361 0 1 1 989,566" fill="none" stroke="#FFFFFF" stroke-width="38"/><path d="M300,606 C296,588 286,580 268,580 C236,580 222,612 225,660 C229,725 268,800 318,824 C334,832 348,830 356,824" fill="none" stroke="#FFFFFF" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/><path d="M980,606 C984,588 994,580 1012,580 C1044,580 1058,612 1055,660 C1051,725 1012,800 962,824 C946,832 932,830 924,824" fill="none" stroke="#FFFFFF" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/><path d="M357,826 C395,980 470,1118 640,1118 C810,1118 885,980 923,826" fill="none" stroke="#FFFFFF" stroke-width="38" stroke-linecap="round"/><path d="M388,572 L600,567 L600,697 C600,751 556,785 498,785 L482,785 C430,785 388,748 388,700 Z M412,593 L576,590 L576,693 C576,736 544,762 498,762 L482,762 C443,762 412,733 412,698 Z" fill="#FFFFFF" fill-rule="evenodd"/><path d="M425,605 L562,603 L562,694 C562,726 538,747 498,747 L482,747 C451,747 426,727 426,703 Z" fill="#FFFFFF"/><path d="M330,535 L482,552 L375,560 Z" fill="#FFFFFF"/><path d="M310,535 L375,573 L375,605 L313,568 Z" fill="#FFFFFF"/><path d="M339,597 L375,620 L377,718 L357,702 Z" fill="#FFFFFF"/><path d="M892,572 L680,567 L680,697 C680,751 724,785 782,785 L798,785 C850,785 892,748 892,700 Z M868,593 L704,590 L704,693 C704,736 736,762 782,762 L798,762 C837,762 868,733 868,698 Z" fill="#FFFFFF" fill-rule="evenodd"/><path d="M855,605 L718,603 L718,694 C718,726 742,747 782,747 L798,747 C829,747 854,727 854,703 Z" fill="#FFFFFF"/><path d="M950,535 L798,552 L905,560 Z" fill="#FFFFFF"/><path d="M970,535 L905,573 L905,605 L967,568 Z" fill="#FFFFFF"/><path d="M941,597 L905,620 L903,718 L923,702 Z" fill="#FFFFFF"/><path d="M612,590 Q640,562 667,590 L667,603 L612,603 Z" fill="#FFFFFF"/><path d="M624,590 Q640,578 655,590 Z" fill="#005387"/><path d="M612,624 Q640,596 667,624 L667,637 L612,637 Z" fill="#FFFFFF"/><path d="M624,624 Q640,612 655,624 Z" fill="#005387"/></svg></div>
+        <div class="ppe-note" data-screen="General lab safety"><svg class="ppe-ico" viewBox="0 0 1280 1280" role="img" aria-label="Wear a lab coat"><circle cx="640" cy="640" r="640" fill="#005387"/><g fill="#FFFFFF"><path d="M527 157 L448 157 C420 157 398 175 388 186 C378 197 368 225 363 241 L218 695 L327 729 L458 363 L355 1089 C400 1098 453 1108 490 1113 C528 1118 580 1121 620 1123 L628 388 Z"/><path d="M753 157 L832 157 C860 157 882 175 892 186 C902 197 912 225 917 241 L1062 695 L953 729 L822 363 L925 1089 C880 1098 827 1108 790 1113 C752 1118 700 1121 660 1123 L652 388 Z"/><path d="M561 177 C600 189 623 192 640 192 C657 192 682 189 718 177 L640 356 Z"/></g><g fill="#005387"><rect x="699" y="330" width="74" height="36"/><rect x="460" y="789" width="120" height="20"/><rect x="700" y="789" width="120" height="20"/></g></svg><div class="ppe-text"><strong class="ppe-h">General lab safety</strong><dl class="ppe-rules"><dt>Always</dt><dd>Lab coat and safety goggles.</dd><dt>Gloves</dt><dd>Next to the SPE manifold. Only for acetonitrile; avoid splashes.</dd><dt>GC-MS</dt><dd>Parts of it get <strong>hot</strong> enough to burn you. Touch the connections only if an instructor says so, and with gloves.</dd><dt>Waste</dt><dd>Anything with acetonitrile goes into the non-halogenated organic waste.</dd></dl></div><svg class="ppe-ico" viewBox="0 0 1280 1280" role="img" aria-label="Wear eye protection"><circle cx="640" cy="640" r="640" fill="#005387"/><path d="M291,566 A349,361 0 1 1 989,566" fill="none" stroke="#FFFFFF" stroke-width="38"/><path d="M300,606 C296,588 286,580 268,580 C236,580 222,612 225,660 C229,725 268,800 318,824 C334,832 348,830 356,824" fill="none" stroke="#FFFFFF" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/><path d="M980,606 C984,588 994,580 1012,580 C1044,580 1058,612 1055,660 C1051,725 1012,800 962,824 C946,832 932,830 924,824" fill="none" stroke="#FFFFFF" stroke-width="38" stroke-linecap="round" stroke-linejoin="round"/><path d="M357,826 C395,980 470,1118 640,1118 C810,1118 885,980 923,826" fill="none" stroke="#FFFFFF" stroke-width="38" stroke-linecap="round"/><path d="M388,572 L600,567 L600,697 C600,751 556,785 498,785 L482,785 C430,785 388,748 388,700 Z M412,593 L576,590 L576,693 C576,736 544,762 498,762 L482,762 C443,762 412,733 412,698 Z" fill="#FFFFFF" fill-rule="evenodd"/><path d="M425,605 L562,603 L562,694 C562,726 538,747 498,747 L482,747 C451,747 426,727 426,703 Z" fill="#FFFFFF"/><path d="M330,535 L482,552 L375,560 Z" fill="#FFFFFF"/><path d="M310,535 L375,573 L375,605 L313,568 Z" fill="#FFFFFF"/><path d="M339,597 L375,620 L377,718 L357,702 Z" fill="#FFFFFF"/><path d="M892,572 L680,567 L680,697 C680,751 724,785 782,785 L798,785 C850,785 892,748 892,700 Z M868,593 L704,590 L704,693 C704,736 736,762 782,762 L798,762 C837,762 868,733 868,698 Z" fill="#FFFFFF" fill-rule="evenodd"/><path d="M855,605 L718,603 L718,694 C718,726 742,747 782,747 L798,747 C829,747 854,727 854,703 Z" fill="#FFFFFF"/><path d="M950,535 L798,552 L905,560 Z" fill="#FFFFFF"/><path d="M970,535 L905,573 L905,605 L967,568 Z" fill="#FFFFFF"/><path d="M941,597 L905,620 L903,718 L923,702 Z" fill="#FFFFFF"/><path d="M612,590 Q640,562 667,590 L667,603 L612,603 Z" fill="#FFFFFF"/><path d="M624,590 Q640,578 655,590 Z" fill="#005387"/><path d="M612,624 Q640,596 667,624 L667,637 L612,637 Z" fill="#FFFFFF"/><path d="M624,624 Q640,612 655,624 Z" fill="#005387"/></svg></div>
 
         <div class="hf-launch app-only" data-screen="Your hazard assessment form">
           <span class="hf-launch-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5"/><path d="M8.5 10h7M8.5 13.5h7M8.5 17h4"/></svg></span>
@@ -10401,6 +10402,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   window.addEventListener('popstate', function() {
     if (!chapPushed) return;
+    if (history.state && history.state.labmodApp) return;   // an interactive's entry went; the chapter's is still there
     if (simOpen()) { closeSim(); try { history.pushState({ labmodApp: 1 }, ''); } catch (e) {} return; }   // back closes the interactive first
     chapPushed = false;
     if (active && !atHome()) { closeSheet(); closeForm(); if (window._goHome) window._goHome(); }
@@ -11441,7 +11443,7 @@ document.addEventListener('click', function(e) {
       var vb = svg.viewBox.baseVal, a = vb.width / vb.height;
       size = function(w) { svg.style.width = Math.round(w) + 'px'; svg.style.height = Math.round(w / a) + 'px'; return Math.round(w / a); };
       wMax = land ? Math.min(0.66 * bw, bh * a) : Math.min(bw, 0.64 * bh * a);
-      ovOn = !!OVER[host.id] && wMax >= 340;   // upright too: the taller plots have room at the top right
+      ovOn = !!OVER[host.id] && wMax >= (host.id === 'fg-integrate' ? 290 : 340);   // upright too: the taller plots have room at the top right (Integrate's peak sits left since 2026-10-07)
     }
     var tries = [];
     if (quad && !land) tries.push([bw, size(bw)]);
@@ -11517,7 +11519,7 @@ document.addEventListener('click', function(e) {
   }
   function openBox(host) {
     if (open) closeBox();
-    open = host; scrollY0 = window.scrollY; paneUp(host);
+    open = host; scrollY0 = window.scrollY; paneUp(host); pushIx(host);
     body.classList.add('ix-lock'); host.classList.add('ix-open'); back.hidden = false;
     var want = BOXES[host.id];
     var go = canFs && !document.fullscreenElement
@@ -11544,6 +11546,7 @@ document.addEventListener('click', function(e) {
   }
   function closeBox() {
     if (!open) return;
+    popIx();
     var host = open; open = null;
     host.classList.remove('ix-open', 'ix-wrong');
     var sh = host.querySelector(':scope > .ix-sheet'); if (sh) sh.remove();
@@ -11575,7 +11578,26 @@ document.addEventListener('click', function(e) {
     if (rb) rb.addEventListener('click', function(e) { e.preventDefault(); e.stopPropagation(); rotateNow(host, turn); });
     host.appendChild(cover); host.appendChild(x); host.appendChild(turn);
   });
-  document.addEventListener('fullscreenchange', function() { if (!document.fullscreenElement) { fsByUs = false; lockByUs = false; if (open) fit(); } });
+  // an interactive is only seen in real full screen (user 2026-10-07: "make it exit the interactive ... so that the interactive is
+  // always in full screen mode"): Back closes it, and so does leaving full screen or the page; reopening is one tap
+  var ixPushed = false, ixBackByUs = false;
+  function pushIx(host) { try { history.pushState({ labmodIx: host.id }, ''); ixPushed = true; } catch (e) {} }
+  function popIx() {                                 // closed another way: take its history entry back out
+    if (!ixPushed) return; ixPushed = false;
+    if (history.state && history.state.labmodIx) { ixBackByUs = true; try { history.back(); } catch (e) { ixBackByUs = false; } }
+  }
+  window.addEventListener('popstate', function() {
+    if (ixBackByUs) { ixBackByUs = false; return; }
+    if (open && ixPushed) { ixPushed = false; closeBox(); }   // Back: the interactive closes, the page stays
+  });
+  document.addEventListener('fullscreenchange', function() {
+    if (document.fullscreenElement) return;
+    var was = fsByUs; fsByUs = false; lockByUs = false;
+    if (open) { if (was) closeBox(); else fit(); }   // left full screen: close it rather than show it half laid out
+  });
+  document.addEventListener('visibilitychange', function() { if (document.hidden && open) closeBox(); });   // another app, the screen off
+  // leaving the page for good: close it, but no history.back() while a navigation is under way (its entry just stays)
+  window.addEventListener('pagehide', function() { if (open) { ixPushed = false; closeBox(); } });
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && open) closeBox(); });
   // typing (user 2026-10-06: "the module shrinks when typing", on a phone): the keyboard takes the lower part of the screen and
   // the layout keeps its size; a turn of the phone (another width) still re-fits
@@ -11595,7 +11617,15 @@ document.addEventListener('click', function(e) {
   if (window.visualViewport) window.visualViewport.addEventListener('resize', refit);   // toolbars coming and going (not the keyboard)
   // back from another app: lay the open view out again once the screen has settled (user 2026-10-07: the Integrate boxes
   // ended up at the bottom "when I go to another app and then go back to it")
-  function settleBack() { if (!open) return; setTimeout(fit, 250); setTimeout(fit, 900); }
+  function settleBack() {                            // only if the size really changed: a needless re-layout can flash
+    if (!open) return;
+    var again = function () {
+      if (!open) return;
+      var vv = window.visualViewport, w = Math.round(vv ? vv.width : window.innerWidth);
+      if (w !== fitVW || stableH() !== fitVH) fit();
+    };
+    setTimeout(again, 250); setTimeout(again, 900);
+  }
   document.addEventListener('visibilitychange', function () { if (!document.hidden) settleBack(); });
   window.addEventListener('pageshow', settleBack); window.addEventListener('focus', settleBack);
   // hints: in full screen the page cannot scroll to the protocol text, so the highlighted paragraphs come to the student
