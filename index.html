@@ -1576,6 +1576,12 @@ body.light-mode {
   color-scheme: light;
 }
 html, body { overscroll-behavior-x: none; }   /* no swipe-back out of the page from inside a drawing (monkey test 2026-10-07) */
+/* in browser full screen (Rotate the screen, or the full-screen interactives on Android) Chrome's swipe-back ignores the
+   root's overscroll-behavior: an open full-screen view takes no sideways pan at all, so there is no swipe to go back with */
+body.ix-phone .ix-host.ix-open { touch-action: pan-y pinch-zoom; overscroll-behavior: none; }
+/* the browser applies touch-action only up to the nearest scroll box, and the squeezed wrapper and panes inside are scroll
+   boxes (the quadrupole's inner wrapper scrolls sideways once squeezed): they block the sideways pan and the chaining too */
+body.ix-phone .ix-host.ix-open :is(.ix-inner, .ix-pane, .quad-sidebar, .wt-body) { touch-action: pan-y pinch-zoom; overscroll-behavior: none; }
 .tab-btn[data-tab="intro"], #panel-intro, #nav-intro { --sec: var(--c-intro); }
 .tab-btn[data-tab="spe"],   #panel-spe,   #nav-spe   { --sec: var(--c-spe); }
 .tab-btn[data-tab="gcms"],  #panel-gcms,  #nav-gcms  { --sec: var(--c-gcms); }
