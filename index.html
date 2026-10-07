@@ -1557,7 +1557,7 @@ body.light-mode #speWashBox   > label { color: #00AA5A !important; }
   --boku-green: #00AA5A;
   --boku-purple: #4B288C;
   --boku-orange: #E6641E;
-  --c-intro: #FFED00;   /* BOKU yellow (user 2026-10-06; dark mode as it is: "dark mode is good"); black ink on it */
+  --c-intro: #7B829B;   /* BOKU navy, its 60 % tint (navy itself disappears on the dark ground); user 2026-10-07: blue, not yellow */
   --c-spe: #00AA5A;
   --c-gcms: #937EBA;
   --c-quant: #E6641E;
@@ -1568,7 +1568,7 @@ body.light-mode #speWashBox   > label { color: #00AA5A !important; }
   color-scheme: dark;
 }
 body.light-mode {
-  --c-intro: #FFF899;   /* light mode: its 40 % tint, pastel (user 2026-10-07: "Light mode is too neon") */
+  --c-intro: #232E58;   /* BOKU navy (design system accent-4), white ink on it */
   --c-spe: #00AA5A;
   --c-gcms: #4B288C;
   --c-quant: #E6641E;
@@ -1586,9 +1586,9 @@ body.ix-phone .ix-host.ix-open :is(.ix-inner, .ix-pane, .quad-sidebar, .wt-body)
 .tab-btn[data-tab="spe"],   #panel-spe,   #nav-spe   { --sec: var(--c-spe); }
 .tab-btn[data-tab="gcms"],  #panel-gcms,  #nav-gcms  { --sec: var(--c-gcms); }
 .tab-btn[data-tab="quant"], #panel-quant, #nav-quant { --sec: var(--c-quant); }
-/* the ink on a solid chapter colour (done badges): black on yellow, green, orange and dark mode's light purple; white on purple */
+/* the ink on a solid chapter colour (done badges): black on green, orange and the light tints of dark mode; white on purple and navy */
 #panel-intro, #panel-spe, #panel-quant, #panel-gcms { --sec-on: #000000; }
-body.light-mode #panel-gcms { --sec-on: #FFFFFF; }
+body.light-mode #panel-gcms, body.light-mode #panel-intro { --sec-on: #FFFFFF; }   /* white on purple and on navy */
 .tab-btn[data-tab="calc"],  #panel-calc, #nav-calc { --sec: var(--c-quant); }
 .tab-btn[data-tab="refs"],  #panel-refs              { --sec: var(--c-refs); }
 
@@ -2093,7 +2093,7 @@ body:not(.at-home) #home { display: none; }
 /* Phone portrait: the home page is one fixed screen, like an app launcher */
 @media (max-width: 560px) and (orientation: portrait) {
   #home {
-    height: 100vh; height: 100dvh; box-sizing: border-box; overflow: hidden;
+    height: 100vh; height: 100dvh; height: 100svh; box-sizing: border-box; overflow: hidden;   /* svh: no jump with the address bar */
     padding: calc(14px + env(safe-area-inset-top, 0px)) 14px calc(14px + env(safe-area-inset-bottom, 0px));
     gap: 10px;
   }
@@ -2142,7 +2142,7 @@ html, body { overflow-x: clip; }
 /* Phone landscape: home = one screen, title card left, chapter tiles right */
 @media (orientation: landscape) and (max-height: 500px) {
   #home {
-    height: 100vh; height: 100dvh; box-sizing: border-box; overflow: hidden; max-width: none;
+    height: 100vh; height: 100dvh; height: 100svh; box-sizing: border-box; overflow: hidden;   /* svh: no jump with the address bar */ max-width: none;
     padding: calc(12px + env(safe-area-inset-top, 0px)) calc(14px + env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) calc(14px + env(safe-area-inset-left, 0px));
     display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); grid-template-rows: minmax(0, 1fr) auto; gap: 10px;
   }
@@ -2682,14 +2682,6 @@ body.app-mode.app-sim-full #appSimClose { display: grid; }
 .wg-txt b { font-size: 0.98rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .wg-btn svg { flex: none; width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .hc-meter { display: block; width: 100%; height: 4px; margin-top: 12px; border-radius: 0; background: var(--surface-3); overflow: hidden; }
-/* Intro & safety in BOKU yellow: black ink on yellow grounds; in light mode no yellow text or icons on white */
-.home-card[data-go="intro"] .hc-ico, .tab-btn[data-tab="intro"].active .tab-ico { color: #000000; }
-body.light-mode .tab-btn[data-tab="intro"]:not(.active) .tab-ico { background: color-mix(in srgb, var(--c-intro) 60%, transparent); color: #000000; }
-body.light-mode #panel-intro .accordion:not(.visited) .acc-badge { background: var(--c-intro) !important; color: #000000 !important; }
-body.light-mode .home-card[data-go="intro"] .hc-meter i { box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); }   /* the yellow bar on a pale track */
-@media (max-width: 979px) {
-  .tab-btn[data-tab="intro"].active .tab-ico { background: color-mix(in srgb, var(--c-intro) 30%, transparent); color: var(--text); }
-}
 /* the icon keeps its square (user 2026-10-06: "the SPE and GC-MS icons get squished") */
 .home-card .hc-ico, .home-card .hc-meter { flex-shrink: 0; }
 /* short cards (the browser's bar showing): the icon sits beside 'Chapter 0n', smaller, so the title and the state line fit */
@@ -11289,9 +11281,21 @@ document.addEventListener('click', function(e) {
     return w;
   }
   // full width; if it is still taller than the screen, shrink it evenly (canvas taps still map correctly)
+  // the height a view is laid out for: the screen with the browser's bars showing (100svh), never more than what shows, so the
+  // address bar sliding in and out does not lay it out again (user 2026-10-07: "the browser link at the top messes with the
+  // dimensions ... makes the layout jump around a lot"); a height far below it (an app switch's blip, the keyboard) does not count
+  var svhProbe = null, fitVH = 0;
+  function stableH() {
+    var vv = window.visualViewport, now = Math.round(vv ? vv.height : window.innerHeight);
+    if (!svhProbe) { svhProbe = document.createElement('div'); svhProbe.setAttribute('aria-hidden', 'true');
+      svhProbe.style.cssText = 'position:fixed;left:-50px;top:0;width:1px;height:100vh;height:100svh;visibility:hidden;pointer-events:none'; body.appendChild(svhProbe); }
+    var sv = Math.round(window._svhTest || svhProbe.offsetHeight || now);
+    return now < 0.75 * sv ? sv : Math.min(sv, now);
+  }
+  window._stableH = stableH;                         // tests
   function fit() {
     if (!open) return;
-    var vv0 = window.visualViewport; fitVW = Math.round(vv0 ? vv0.width : window.innerWidth);   // the width this layout is for
+    var vv0 = window.visualViewport; fitVW = Math.round(vv0 ? vv0.width : window.innerWidth); fitVH = stableH();   // the size this layout is for
     open.classList.toggle('ix-wrong', !lockByUs && wrongWay(open));
     var w = inner(open);
     w.style.transform = ''; w.style.marginBottom = '';
@@ -11407,7 +11411,7 @@ document.addEventListener('click', function(e) {
     fits(lo); return lo;
   }
   function fitProto(host) {                        // a lab protocol: counter and Previous/Next on top, the page below, squeezed only if it must be
-    var vv = window.visualViewport, vh = Math.round(vv ? vv.height : window.innerHeight);
+    var vh = stableH();
     host.style.height = vh + 'px';
     var inner = host.querySelector(':scope > .ix-inner'), bd = host.querySelector('.wt-body'); if (!inner || !bd) return;
     bd.style.transform = bd.style.width = bd.style.height = bd.style.overflowY = '';
@@ -11416,7 +11420,7 @@ document.addEventListener('click', function(e) {
   }
   function fitPaned(host) {
     if (host.classList.contains('walkthrough')) return fitProto(host);
-    var vv = window.visualViewport, vh = Math.round(vv ? vv.height : window.innerHeight), vw = Math.round(vv ? vv.width : window.innerWidth);
+    var vv = window.visualViewport, vh = stableH(), vw = Math.round(vv ? vv.width : window.innerWidth);
     host.style.height = vh + 'px';                  // the screen we really have (100vh and 100dvh can be taller than what shows)
     var quad = host.id === 'quadAnimBox', pane = host.querySelector('.ix-pane'), body = host.querySelector(quad ? '.quad-layout' : '.ixf-body');
     var svg = quad ? null : host.querySelector('.fg-art svg'), col = quad ? host.querySelector('.quad-canvas-col') : null;
@@ -11584,11 +11588,16 @@ document.addEventListener('click', function(e) {
   function refit() {
     if (!open || selfResize) return;
     var vv = window.visualViewport, w = Math.round(vv ? vv.width : window.innerWidth);
-    if (typing() && w === fitVW) return;
+    if (w === fitVW && (typing() || stableH() === fitVH)) return;   // the same width: the keyboard, or only the address bar
     clearTimeout(fit._t); fit._t = setTimeout(fit, 120);
   }
   window.addEventListener('resize', refit);
   if (window.visualViewport) window.visualViewport.addEventListener('resize', refit);   // toolbars coming and going (not the keyboard)
+  // back from another app: lay the open view out again once the screen has settled (user 2026-10-07: the Integrate boxes
+  // ended up at the bottom "when I go to another app and then go back to it")
+  function settleBack() { if (!open) return; setTimeout(fit, 250); setTimeout(fit, 900); }
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) settleBack(); });
+  window.addEventListener('pageshow', settleBack); window.addEventListener('focus', settleBack);
   // hints: in full screen the page cannot scroll to the protocol text, so the highlighted paragraphs come to the student
   function hintSheet(nodes, title) {
     if (!open || !nodes.length) return;
@@ -12146,10 +12155,10 @@ window.IxWhen = function (fig, cond) {
 (function () {
   var fig = document.getElementById('fg-integrate'); if (!fig) return;
   var svg = fig.querySelector('.fg-art svg'), NS = 'http://www.w3.org/2000/svg';
-  var M = 1858338, B = -1974;                          // the same run's calibration line (counts per mg/mL, counts)
-  var T0 = 5.20, T1 = 5.75, N = 221, DT = (T1 - T0) / (N - 1) * 60;          // min; seconds per grid step for the area
-  var RT = [5.1808,5.1862,5.1917,5.1971,5.2026,5.2081,5.2135,5.2190,5.2244,5.2299,5.2353,5.2408,5.2463,5.2517,5.2572,5.2626,5.2681,5.2736,5.2790,5.2845,5.2899,5.2954,5.3008,5.3063,5.3118,5.3172,5.3227,5.3281,5.3336,5.3391,5.3445,5.3500,5.3554,5.3609,5.3663,5.3718,5.3773,5.3827,5.3882,5.3937,5.3991,5.4046,5.4100,5.4155,5.4209,5.4264,5.4318,5.4373,5.4428,5.4482,5.4537,5.4592,5.4646,5.4701,5.4755,5.4810,5.4864,5.4919,5.4973,5.5028,5.5083,5.5137,5.5192,5.5247,5.5301,5.5356,5.5410,5.5465,5.5519,5.5574,5.5629,5.5683,5.5738,5.5792,5.5847,5.5901,5.5956,5.6011,5.6065,5.6120,5.6174,5.6229,5.6284,5.6338,5.6393,5.6447,5.6502,5.6556,5.6611,5.6666,5.6720,5.6775,5.6829,5.6884,5.6939,5.6993,5.7048,5.7102,5.7157,5.7211,5.7266,5.7321,5.7375,5.7430,5.7485,5.7539,5.7594,5.7648];   // the real samples: time (min, moved)
-  var RY = [64,67,64,66,65,65,62,64,63,62,63,64,63,63,63,61,65,63,63,63,63,63,64,63,63,64,64,67,240,3357,15862,25216,17632,10757,7606,6007,4985,4304,3871,3396,3033,2750,2523,2369,2190,2043,1858,1744,1676,1579,1524,1422,1335,1267,1208,1149,1136,1069,1036,997,934,919,882,860,847,824,784,747,722,718,691,671,653,627,604,594,588,577,558,529,513,507,503,490,488,457,455,448,449,448,437,418,400,407,397,390,387,372,366,358,368,364,351,344,341,336,338,329];   // and signal (counts/s)
+  var M = 1870299, B = -804;                          // the same run's calibration line (counts per mg/mL, counts)
+  var T0 = 5.25, T1 = 5.90, N = 261,   /* the window: the peak left of the table, more of the tail (user 2026-10-07) */ DT = (T1 - T0) / (N - 1) * 60;          // min; seconds per grid step for the area
+  var RT = [5.2353,5.2408,5.2463,5.2517,5.2572,5.2626,5.2681,5.2736,5.2790,5.2845,5.2899,5.2954,5.3008,5.3063,5.3118,5.3172,5.3227,5.3281,5.3336,5.3391,5.3445,5.3500,5.3554,5.3609,5.3663,5.3718,5.3773,5.3827,5.3882,5.3937,5.3991,5.4046,5.4100,5.4155,5.4209,5.4264,5.4318,5.4373,5.4428,5.4482,5.4537,5.4592,5.4646,5.4701,5.4755,5.4810,5.4864,5.4919,5.4973,5.5028,5.5083,5.5137,5.5192,5.5247,5.5301,5.5356,5.5410,5.5465,5.5519,5.5574,5.5629,5.5683,5.5738,5.5792,5.5847,5.5901,5.5956,5.6011,5.6065,5.6120,5.6174,5.6229,5.6284,5.6338,5.6393,5.6447,5.6502,5.6556,5.6611,5.6666,5.6720,5.6775,5.6829,5.6884,5.6939,5.6993,5.7048,5.7102,5.7157,5.7211,5.7266,5.7321,5.7375,5.7430,5.7485,5.7539,5.7594,5.7648,5.7703,5.7757,5.7812,5.7866,5.7921,5.7976,5.8030,5.8085,5.8140,5.8194,5.8249,5.8303,5.8358,5.8412,5.8467,5.8521,5.8576,5.8631,5.8685,5.8740,5.8795,5.8849,5.8904,5.8958,5.9013,5.9067,5.9122,5.9177];   // the real samples: time (min, moved)
+  var RY = [63,64,63,63,63,61,65,63,63,63,63,63,64,63,63,64,64,67,240,3357,15862,25216,17632,10757,7606,6007,4985,4304,3871,3396,3033,2750,2523,2369,2190,2043,1858,1744,1676,1579,1524,1422,1335,1267,1208,1149,1136,1069,1036,997,934,919,882,860,847,824,784,747,722,718,691,671,653,627,604,594,588,577,558,529,513,507,503,490,488,457,455,448,449,448,437,418,400,407,397,390,387,372,366,358,368,364,351,344,341,336,338,329,331,312,303,308,307,302,311,296,291,282,281,283,271,270,271,262,263,269,254,254,257,255,250,242,242,248,238,237];   // and signal (counts/s)
   var BASE = 64, RISE = 5.3281;                          // the flat baseline before the peak; where the peak leaves it
   var X0 = 60, X1 = 348, Y0 = 16, Y1 = 170, YMAX = 27000;
   function tallMode() {                                   // phones, full screen, upright: a taller plot (Y1 250, not 170)
@@ -12254,7 +12263,7 @@ window.IxWhen = function (fig, cond) {
       var dfs = el('defs', {}), mk = el('marker', { id: 'igArrow', viewBox: '0 0 8 8', refX: 7, refY: 4, markerWidth: 6, markerHeight: 6, orient: 'auto-start-reverse' }, dfs);
       el('path', { d: 'M0,0 L8,4 L0,8 Z', style: 'fill:var(--fg-guide)' }, mk);
       P.forEach(function (p, k) {
-        var w = 40, h = 17, cx = k ? X(p.t) + 34 : Math.max(X0 + w / 2 + 4, X(p.t) - 34), cy = Math.min(Y(p.v) - 30, Y(6000));   // the left box clear of the axis
+        var w = 40, h = 17, cx = k ? (X(p.t) + 34 + w / 2 > 356 ? X(p.t) - 34 : X(p.t) + 34) : Math.max(X0 + w / 2 + 4, X(p.t) - 34), cy = Math.min(Y(p.v) - 30, Y(6000));   // the left box clear of the axis
         el('line', { x1: cx + (k ? -10 : 10), y1: cy + h / 2, x2: X(p.t) + (k ? 3 : -3), y2: Y(p.v) - 6, style: 'stroke:var(--fg-guide)', 'stroke-width': 1.6, 'marker-end': 'url(#igArrow)' });
         el('rect', { x: cx - w / 2, y: cy - h / 2, width: w, height: h, style: 'fill:var(--fg-guide)' });
         txt(cx, cy + 4, 'Drag', { anchor: 'middle', bold: true, size: 10, fill: 'var(--fg-guideInk)' });
@@ -12308,7 +12317,7 @@ window.IxWhen = function (fig, cond) {
   });
   // integration styles (user 2026-10-06): where the peak ends x the baseline; each with the same run's standards integrated
   // that way (1/x, 0.01-1 mg/mL, harmon/peaks/style_lines6.json)
-  var LINES = {"early_edge": [1741964, -11351], "early_drop": [1785328, -8357], "late_edge": [1822861, -5393], "late_drop": [1846913, -3161], "whole_edge": [1837284, -4121]};
+  var LINES = {"early_edge": [1741964, -11351], "early_drop": [1785328, -8357], "late_edge": [1822861, -5393], "late_drop": [1846913, -3161], "whole_edge": [1850983, -2613]};
   LINES.whole_drop = [M, B];
   var ENDT = { early: 5.45, late: 5.65, whole: T1 - 0.005 };
   var NOTE_E = { early: 'Ends 0.1 min after the apex, like many auto-integrators.', late: 'Ends 0.3 min after the apex.', whole: 'Ends with the window: all of the tail.' };
@@ -12357,7 +12366,7 @@ window.IxWhen = function (fig, cond) {
       html: 'Match this auto-integration by hand. Start where the peak rises and end at the end of the window, with both dots on the baseline level before the peak. Watch your accuracy move toward the auto-integration&rsquo;s as you get closer.',
       wait: until(close) },
     { title: 'Consistency matters most', targets: [q('.ig-conc')], keep: [{ el: svg }], next: 'Finish',
-      html: 'Auto-integrated the same way as the rest of its curve, this standard reads within 89&ndash;96&nbsp;% every way, and the whole tail with a dropped baseline reads it best. <b>The biggest thing for accuracy is consistent integration: integrate your samples exactly like your standards.</b>' }
+      html: 'Auto-integrated the same way as the rest of its curve, this standard reads within 89&ndash;97&nbsp;% every way, and the whole tail with a dropped baseline reads it best. <b>The biggest thing for accuracy is consistent integration: integrate your samples exactly like your standards.</b>' }
   ];
   var tour = window.IxFigTour(fig, TOUR, { onStart: restart, mins: 2,
     snapshot: function () { return { P: P.map(function (p) { return [p.t, p.v]; }), moved: moved, e: endSel, b: baseSel, show: showStd }; },
